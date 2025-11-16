@@ -118,13 +118,9 @@ breaks_fixed = c(0, 10, 50, 100)
 
 Coluna com rótulos finais no formato:
 
-``` css
+```
 a – b [n]
 ```
-
-<style type="text/css">
-a – b [n]
-</style>
 
 onde **n** é o número de observações em cada classe.
 

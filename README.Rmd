@@ -107,7 +107,7 @@ breaks_fixed = c(0, 10, 50, 100)
 
 Coluna com rótulos finais no formato:
 
-```{css}
+```{eval=FALSE}
 a – b [n]
 ```
 
