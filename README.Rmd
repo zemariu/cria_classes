@@ -1,0 +1,155 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/",
+  out.width = "100%"
+)
+```
+
+# cria_classes
+
+👤 Autor: José Mário Nunes da Silva
+
+e-mail: zemariu@usp.br
+
+## A Função `cria_classe`
+
+A função `cria_classes` automatiza o processo de criação de classes para variáveis numéricas utilizadas em mapas temáticos, permitindo diferentes métodos de classificação e tratando valores iguais a zero como uma classe independente. Isso torna o
+procedimento mais transparente, reprodutível e adequado para análises epidemiológicas, especialmente quando há áreas sem ocorrência do evento analisado.
+
+Este código faz parte do **curso Epidemiologia Descritiva Aplicada à Tuberculose**, mas pode ser usado amplamente em análises epidemiológicas e espaciais.
+
+# Instalação
+
+Como esta função não é (ainda) um pacote CRAN, instale diretamente do GitHub:
+```{r eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("zemariu/cria_classes")
+```
+
+## O que a função faz?
+
+* Gera classes para variáveis numéricas com diversos estilos:
+
+    -  `"quantile"` — intervalos por quantis
+
+    -  `"equal"` — intervalos de amplitude igual
+
+    -  `"sd"` — média ± desvio-padrão
+
+    -  `"pretty"` — intervalos arredondados
+
+    -  `"fixed"` — intervalos definidos manualmente pelo usuário
+
+* Cria automaticamente:
+
+    -  uma classe exclusiva para valores **zero**,
+
+    -  uma coluna de classes (`classe`),
+
+    -  uma coluna com rótulos finalizados (`classe_label`) contendo o número de observações por intervalo.
+
+* Suporta separadores decimais vírgula ou ponto.
+
+## Dependências
+
+A função utiliza:
+
+* `dplyr`
+
+* `classInt`
+
+* `rlang`
+
+Esses pacotes são carregados automaticamente quando a função é chamada (instalando caso necessário).
+
+# Como funciona
+
+* Após carregar o script com `source()`, a função passa a ficar disponível no ambiente do R.
+
+* No **RStudio**, você pode confirmar sua presença observando o painel **Environment** (canto superior direito), onde o nome `cria_classes` aparecerá listado.
+
+## Principais argumentos da função 
+
+* **`dados`**: Objeto (data.frame ou tibble) que contém a variável numérica a ser classificada. É o *dataset* original ao qual as novas colunas de classes serão adicionadas.
+
+* **`var`**: Nome (string) da variável numérica dentro de `dados` que será usada para gerar os intervalos de classe. Exemplo: `"INCID_2024"`.
+
+* **`n_classes`**: Número de classes a serem criadas (default: **3**). É ignorado se `style = "fixed"`.
+
+* **`style`**: Define o método de classificação utilizado para gerar os intervalos. Opções aceitas: `"quantile"`, `"equal"`, `"sd"`, `"pretty"`, `"fixed"` e `breaks_fixed`
+
+* **`breaks_fixed`**: Usado somente quando `style = "fixed"`.
+Vetor numérico com os limites dos intervalos. Exemplo:
+
+```{r eval=FALSE}
+breaks_fixed = c(0, 10, 50, 100)
+```
+
+* **`nome_classe`**: Nome da nova coluna de saída contendo as classes (fatores), o default: `"classe"`.
+
+* **`sep_decimal`**: Define o separador decimal usado nos rótulos produzidos. Opções:* 
+
+    -   `","` (default, útil para textos e mapas em português)
+    -   `"."` (padrão internacional)
+
+* **Colunas criadas automaticamente**
+
+   -  A função sempre cria: **`<nome_classe>`**
+   -  Coluna contendo os intervalos como fatores: **`<nome_classe>_label`**
+
+Coluna com rótulos finais no formato:
+
+```{css}
+a – b [n]
+```
+
+onde **n** é o número de observações em cada classe.
+
+## Exemplo de uso
+```{eval=FALSE}
+# Exemplo ilustrativo
+
+# Carregando a função depois de baixar
+source("cria_classes.R")
+
+# Data frame
+df <- data.frame(incid = c(0, 0, 1.5, 3.2, 7.8, 10.1, 14.2))
+
+# Usando a função
+resultado <- cria_classes(
+dados = df,
+var   = "incid",
+n_classes = 3,
+style = "quantile",
+nome_classe = "classe_incid"
+)
+
+# Visualizando resultado
+resultado
+```
+
+## Saída esperada:
+
+A função retorna o objeto com duas novas colunas:
+
+* classe_incid
+
+* classe_incid_label
+
+## Licença
+
+GPL-3 (recomendado para pacotes acadêmicos; adapte se necessário)
+
+## Citation
+
+Se utilizar esta função em materiais acadêmicos, cite:
+
+da Silva, J. M. N. (2025). `cria_classes()`: função para geração de intervalos de classes em análises epidemiológicas e mapas temáticos.
