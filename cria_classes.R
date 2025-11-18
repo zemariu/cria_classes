@@ -31,7 +31,8 @@
 #   style      = "quantile",
 #   nome_classe       = "classe_incid",
 #   nome_classe_label = "classe_incid_label",
-#   sep_decimal  = "," (default)
+#   sep_decimal  = "," (default),
+#   contagem     = TRUE (default)
 # )
 # -------------------------------------------------------------------
 
