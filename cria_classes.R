@@ -58,11 +58,12 @@ usar_pacote("rlang")
 cria_classes <- function(
     dados,
     var,
-    n_classes = 3,
-    style = "quantile",
+    n_classes   = 3,
+    style       = "quantile",
     breaks_fixed = NULL,
     nome_classe = "classe",
-    sep_decimal = ","
+    sep_decimal = ",",
+    contagem    = TRUE        
 ) {
   # nome da coluna de rótulos
   nome_classe_label <- paste0(nome_classe, "_label")
@@ -84,7 +85,8 @@ cria_classes <- function(
   # caso especial: tudo zero
   if (nrow(dados_pos) == 0) {
     n0 <- nrow(dados_zero)
-    rot0 <- paste0("0 [", n0, "]")
+    rot0 <- if (contagem) paste0("0 [", n0, "]") else "0"
+    
     return(
       dados |>
         dplyr::mutate(
@@ -130,7 +132,7 @@ cria_classes <- function(
     out
   }
   
-  # rótulos dos intervalos
+  # rótulos “puros” dos intervalos (sem contagem)
   labels <- paste0(
     format_dec(head(qs_lab, -1)),
     " – ",
@@ -156,26 +158,30 @@ cria_classes <- function(
   tab_n <- as.integer(table(factor(dados_pos[[nome_classe]], levels = labels)))
   names(tab_n) <- labels
   
-  # criar labels com [n]
-  labels_com_n <- paste0(labels, " [", tab_n, "]")
-  names(labels_com_n) <- labels
+  # labels com ou sem [n]
+  if (contagem) {
+    labels_lab <- paste0(labels, " [", tab_n, "]")
+  } else {
+    labels_lab <- labels
+  }
+  names(labels_lab) <- labels
   
   # aplicar labels
   dados_pos <- dados_pos |>
     dplyr::mutate(
-      !!nome_classe_label := labels_com_n[as.character(.data[[nome_classe]])]
+      !!nome_classe_label := labels_lab[as.character(.data[[nome_classe]])]
     ) |>
     dplyr::mutate(
       !!nome_classe_label := factor(.data[[nome_classe_label]],
-                                    levels = labels_com_n)
+                                    levels = unique(labels_lab))
     )
   
   # ----------------------------
   # incluir classe zero se houver zeros
   # ----------------------------
   if (nrow(dados_zero) > 0) {
-    n0 <- nrow(dados_zero)
-    rot0 <- paste0("0 [", n0, "]")
+    n0   <- nrow(dados_zero)
+    rot0 <- if (contagem) paste0("0 [", n0, "]") else "0"
     
     dados_zero <- dados_zero |>
       dplyr::mutate(
@@ -184,12 +190,9 @@ cria_classes <- function(
       )
     
     dados_saida <- dplyr::bind_rows(dados_zero, dados_pos)
-    
   } else {
     dados_saida <- dados_pos
   }
   
   return(dados_saida)
 }
-
-
