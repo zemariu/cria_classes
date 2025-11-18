@@ -104,17 +104,11 @@ breaks_fixed = c(0, 10, 50, 100)
 - **`nome_classe`**: Nome da nova coluna de saída contendo as classes
   (fatores), o default: `"classe"`.
 
-- **`sep_decimal`**: Define o separador decimal usado nos rótulos
-  produzidos. Opções:\*
+  - **Colunas criadas automaticamente**
 
-  - `","` (default, útil para textos e mapas em português)
-  - `"."` (padrão internacional)
-
-- **Colunas criadas automaticamente**
-
-  - A função sempre cria: **`<nome_classe>`**
-  - Coluna contendo os intervalos como fatores:
-    **`<nome_classe>_label`**
+    - A função sempre cria: **`<nome_classe>`**
+    - Coluna contendo os intervalos como fatores:
+      **`<nome_classe>_label`**
 
 Coluna com rótulos finais no formato:
 
@@ -123,6 +117,31 @@ a – b [n]
 ```
 
 onde **n** é o número de observações em cada classe.
+
+- **`sep_decimal`**: Define o separador decimal usado nos rótulos
+  produzidos. Opções:\*
+
+  - `","` (default, útil para textos e mapas em português)
+  - `"."` (padrão internacional)
+
+- **`contagem`** (lógico; padrão = `TRUE`) controla se a **quantidade de
+  observações em cada classe** deve ser exibida entre colchetes nos
+  rótulos das categorias.
+
+  - Quando `contagem = TRUE`, cada intervalo recebe a forma:
+
+  - Quando `contagem = FALSE`, os rótulos exibem apenas os **intervalos
+    numéricos**, sem a contagem entre colchetes:
+
+``` r
+# contagem = TRUE
+"12,6 – 18,9 [25]"
+```
+
+``` r
+# contagem = FALSE
+"12,6 – 18,9"
+```
 
 ## Exemplo de uso
 
@@ -141,7 +160,9 @@ dados = df,
 var   = "incid",
 n_classes = 3,
 style = "quantile",
-nome_classe = "classe_incid"
+nome_classe = "classe_incid",
+sep_decimal = ",",
+contagem = TRUE
 )
 
 # Visualizando resultado
