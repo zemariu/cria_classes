@@ -20,7 +20,8 @@
 # Argumentos extras:
 #   nome_classe        → nome da coluna com as classes (fator)
 #   nome_classe_label  → nome da coluna com labels finalizados
-#
+#   separador decimal  → escolha do separador decimal ("," ou ".")
+#   contagem           → contagem dos valores por classe
 # -------------------------------------------------------------------
 # EXEMPLO DE USO
 # -------------------------------------------------------------------
